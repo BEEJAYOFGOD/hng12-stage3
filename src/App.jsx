@@ -11,6 +11,7 @@ function App() {
   const chatContainerRef = useRef(null); // Step 1: Create a ref for the chat container
 
   const handleSendPrompt = async () => {
+    alert("yo");
     const detector = await self.ai.languageDetector.create();
     if (!promptText.trim()) return;
 
