@@ -11,48 +11,52 @@ function App() {
   const chatContainerRef = useRef(null); // Step 1: Create a ref for the chat container
 
   const handleSendPrompt = async () => {
-    const detector = await self.ai.languageDetector.create();
-    if (!promptText.trim()) return;
+    try {
+      const detector = await self.ai.languageDetector.create();
+      if (!promptText.trim()) return;
 
-    let newPrompt = {
-      id: prompts.length,
-      text: promptText,
-      language: "loading",
-      summary: "",
-      translation: "",
-      translateLanguage: null,
-    };
-    setPromptText("");
+      let newPrompt = {
+        id: prompts.length,
+        text: promptText,
+        language: "loading",
+        summary: "",
+        translation: "",
+        translateLanguage: null,
+      };
+      setPromptText("");
 
-    const { detectedLanguage, confidence } = (
-      await detector.detect(promptText)
-    )[0];
+      const { detectedLanguage, confidence } = (
+        await detector.detect(promptText)
+      )[0];
 
-    switch (detectedLanguage) {
-      case "en":
-        newPrompt.language = "en";
-        break;
-      case "pt":
-        newPrompt.language = "pt";
-        break;
-      case "es":
-        newPrompt.language = "es";
-        break;
-      case "ru":
-        newPrompt.language = "ru";
-        break;
-      case "tr":
-        newPrompt.language = "tr";
-        break;
-      case "fr":
-        newPrompt.language = "fr";
-        break;
-      default:
-        console.warn("Language not supported, defaulting to English");
-        newPrompt.language = "English";
+      switch (detectedLanguage) {
+        case "en":
+          newPrompt.language = "en";
+          break;
+        case "pt":
+          newPrompt.language = "pt";
+          break;
+        case "es":
+          newPrompt.language = "es";
+          break;
+        case "ru":
+          newPrompt.language = "ru";
+          break;
+        case "tr":
+          newPrompt.language = "tr";
+          break;
+        case "fr":
+          newPrompt.language = "fr";
+          break;
+        default:
+          console.warn("Language not supported, defaulting to English");
+          newPrompt.language = "English";
+      }
+
+      setPrompts([...prompts, newPrompt]);
+    } catch (error) {
+      alert(error);
     }
-
-    setPrompts([...prompts, newPrompt]);
   };
 
   const handleSummarize = (promptToSummarize) => {
@@ -103,7 +107,7 @@ function App() {
         )
       );
     } catch (error) {
-      alert(error);
+      console.log(error);
       // setPrompts((prevPrompts) =>
       //   prevPrompts.map((prompt) =>
       //     prompt.id === promptToTranslate.id
